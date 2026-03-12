@@ -31,7 +31,7 @@ function Invoke-JulesForRange {
         }
         requirePlanApproval = $false
         automationMode      = "AUTO_CREATE_PR"
-        title               = "パレティーナの日記を書く。($targetRange)"
+        title               = "パレティーナの日記を書く。"
     } | ConvertTo-Json -Depth 10
 
     $session = Invoke-RestMethod -Uri "$BASE_URL/sessions" -Method Post -Headers $HEADERS -Body $body
@@ -115,7 +115,7 @@ function Invoke-JulesForRange {
     Write-Host "⚠️ 整合性チェックをスキップします。PRの内容を正としてマージします。" -ForegroundColor Yellow
     # --- End Verification Step ---
 
-    gh pr review $prUrl --approve --body "Approved by palettina automation script. Range: $targetRange"
+    gh pr review $prUrl --approve --body "Approved by palettina automation script."
     
     Write-Host "🛠️ PRをマージします: $prUrl" -ForegroundColor Cyan
     gh pr merge $prUrl --merge --delete-branch
@@ -128,9 +128,11 @@ function Invoke-JulesForRange {
     Start-Sleep -Seconds 20
 
     # 5. ローカルへの同期
-    Write-Host "📥 ローカルの main ブランチを更新します（競合時はリモート優先で上書き）..." -ForegroundColor Green
-    git checkout main
-    git pull origin main -s recursive -X theirs
+    Write-Host "📥 ローカルの main ブランチを更新します（リモートを絶対的な真実として強制同期）..." -ForegroundColor Green
+    git fetch origin main
+    git checkout -f main
+    git reset --hard origin/main
+    git clean -fd
 
     Write-Host "✨ 範囲 $targetRange の全工程が完了しました！" -ForegroundColor Green
     Start-Sleep -Seconds 20
