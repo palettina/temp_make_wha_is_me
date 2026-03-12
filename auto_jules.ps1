@@ -127,12 +127,10 @@ function Invoke-JulesForRange {
     Write-Host "⏳ GitHubへの反映と同期を待機中 (20秒)..." -ForegroundColor Gray
     Start-Sleep -Seconds 20
 
-    # 5. ローカルへの同期
-    Write-Host "📥 ローカルの main ブランチを更新します（リモートを絶対的な真実として強制同期）..." -ForegroundColor Green
-    git fetch origin main
-    git checkout -f main
-    git reset --hard origin/main
-    git clean -fd
+    # 5. ローカルへの同期 
+    Write-Host "📥 ローカルの main ブランチを更新します（競合時はリモート優先で上書き）..." -ForegroundColor Green
+    git checkout main
+    git pull origin main -s recursive -X theirs
 
     Write-Host "✨ 範囲 $targetRange の全工程が完了しました！" -ForegroundColor Green
     Start-Sleep -Seconds 20
