@@ -26,7 +26,7 @@ function Invoke-JulesForRange {
     $body = @{
         prompt              = "gemini_command.md 質問は一切受け付けません。実行を遂行せよ。gemini_command.mdの書き換えは絶対禁止。"
         sourceContext       = @{
-            source            = "sources/github/komiyamma/temp_make_palettina_fantasy_book_2"
+            source            = "sources/github/komiyamma/temp_make_wha_is_me"
             githubRepoContext = @{ startingBranch = "main" }
         }
         requirePlanApproval = $false
@@ -105,7 +105,7 @@ function Invoke-JulesForRange {
 
     if (-not $prUrl) {
         Write-Warning "PR URL が取得できませんでした。gh コマンドで最新の PR を探します。"
-        $prUrl = gh pr list --repo "komiyamma/temp_make_palettina_fantasy_book_2" --limit 1 --json url --jq ".[0].url"
+        $prUrl = gh pr list --repo "komiyamma/temp_make_wha_is_me" --limit 1 --json url --jq ".[0].url"
     }
 
     Write-Host "🛠️ PR 承認とマージを実行します: $prUrl" -ForegroundColor Cyan
