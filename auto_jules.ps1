@@ -6,6 +6,19 @@ Param(
     [switch]$Loop
 )
 
+# --- 古いマークダウンファイルの整理 ---
+Write-Host "🧹 17*.md ファイルの整理を開始します..." -ForegroundColor Cyan
+$mdFiles = Get-ChildItem -Path "17*.md" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending
+if ($mdFiles.Count -gt 10) {
+    $filesToDelete = $mdFiles | Select-Object -Skip 10
+    foreach ($file in $filesToDelete) {
+        Remove-Item -Path $file.FullName -Force
+        Write-Host "🗑️ 古いファイルを削除しました: $($file.Name)" -ForegroundColor DarkGray
+    }
+} else {
+    Write-Host "ℹ️ 削除対象のファイルはありません（現在 $($mdFiles.Count) 個）" -ForegroundColor DarkGray
+}
+
 # --- 設定 ---
 $API_KEY = $env:JULES_API_KEY
 $HEADERS = @{
